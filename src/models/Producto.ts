@@ -19,8 +19,12 @@ const ProductoSchema: Schema = new Schema(
     precio: { type: Number, required: true },
     stock: { type: Number, required: true },
     image: { type: String },
-    vendedor: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
-    categoria: { type: mongoose.Schema.Types.ObjectId, ref: 'Categoria', required: true },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    vendedorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
+    categoriaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Categoria', required: true },
   },
   { timestamps: { createdAt: 'fechaCreacion', updatedAt: 'fechaActualizacion' } }
 );

@@ -6,7 +6,7 @@ export const uploadImage = async (req: Request, res: Response) => {
 
   try {
     const imageUrl = await uploadImageToS3(req.file);
-    res.status(201).json({ url: imageUrl });
+    res.status(201).json({ imageUrl: imageUrl });
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ message: 'Image upload failed', error });
