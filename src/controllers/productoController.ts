@@ -16,9 +16,25 @@ export const getProductos = async (_req: Request, res: Response) => {
 };
 
 export const createProducto = async (req: Request, res: Response) => {
-  const nuevoProducto = new Producto(req.body);
-  await nuevoProducto.save();
-  res.status(201).json(nuevoProducto);
+  try {
+    const { nombre, descripcion, precio, stock, categoriaId, image } = req.body;
+
+    const nuevoProducto = new Producto({
+      nombre,
+      descripcion,
+      precio,
+      stock,
+      image,
+      categoriaId,
+      vendedorId: req.usuario?.id, // 👈 acá es donde se usa el ID del token
+    });
+
+    await nuevoProducto.save();
+    res.status(201).json(nuevoProducto);
+  } catch (error) {
+    console.error("Error al crear producto:", error);
+    res.status(500).json({ message: "Error al crear producto" });
+  }
 };
 
 export const getProductoById = async (req: Request, res: Response) => {

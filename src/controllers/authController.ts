@@ -38,5 +38,13 @@ export const login = async (req: Request, res: Response) => {
   const usuarioSinPassword = usuario.toObject() as { [key: string]: any };
   delete usuarioSinPassword.password;
 
+  // Setear cookie HTTP-only
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 1000, // 1 día en milisegundos
+  });
+
   res.json({ token, usuario: usuarioSinPassword });
 };

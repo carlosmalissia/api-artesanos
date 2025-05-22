@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 import usuarioRoutes from './routes/usuarioRoutes';
 import authRoutes from './routes/authRoutes';
 import productoRoutes from './routes/productoRoutes';
@@ -15,8 +15,12 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // tu frontend
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 // Rutas
 app.use('/api/auth', authRoutes);
