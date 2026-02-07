@@ -14,6 +14,6 @@ router.get('/', getProductos);
 router.post('/', authenticate, authorize(['admin', 'vendedor']), createProducto);
 router.get('/:id', getProductoById);
 router.put('/:id', authenticate, authorize(['admin', 'vendedor']), updateProducto);
-router.delete('/:id', authenticate, authorize(['admin']), deleteProducto);
+router.delete('/:id', authenticate, authorize(['admin', 'vendedor']), deleteProducto);
 
 export default router;
