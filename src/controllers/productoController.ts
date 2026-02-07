@@ -38,7 +38,7 @@ export const createProducto = async (req: Request, res: Response) => {
 };
 
 export const getProductoById = async (req: Request, res: Response) => {
-  const producto = await Producto.findById(req.params.id).populate('vendedor').populate('categoria');
+  const producto = await Producto.findById(req.params.id).populate('vendedorId').populate('categoriaId');
   if (!producto) return res.status(404).json({ message: 'Producto no encontrado' });
   res.json(producto);
 };

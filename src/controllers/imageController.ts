@@ -3,7 +3,7 @@ import { uploadImageToS3, deleteImageFromS3 } from '../services/s3Service';
 
 export const uploadImage = async (req: Request, res: Response) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-
+console.log("req.file:", req.file);
   try {
     const imageUrl = await uploadImageToS3(req.file);
     res.status(201).json({ imageUrl: imageUrl });
