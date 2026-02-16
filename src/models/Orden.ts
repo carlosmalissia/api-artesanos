@@ -21,10 +21,13 @@ const OrdenSchema: Schema = new Schema(
       {
         producto: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto', required: true },
         cantidad: { type: Number, required: true },
+        PrecioUnitario:{type: Number }
       },
     ],
     comprador: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     vendedor: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
+    precioTotal: {type: Number},
+    estado: {type: String,enum:["pendiente", "pagada"], default:"pendiente"}
   },
   { timestamps: { createdAt: 'fechaCreacion', updatedAt: 'fechaActualizacion' } }
 );

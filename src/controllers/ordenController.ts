@@ -1,11 +1,26 @@
 import { Request, Response } from 'express';
 import Orden from '../models/Orden';
 
+import mongoose from "mongoose";
+
 export const getOrdenes = async (req: Request, res: Response) => {
-  const filtro = req.usuario?.rol === 'vendedor' ? { vendedor: req.usuario.id } : {};
-  const ordenes = await Orden.find(filtro).populate('productos.producto').populate('comprador vendedor');
+  const filtro =
+    req.usuario?.rol === "vendedor"
+      ? { vendedor: new mongoose.Types.ObjectId(req.usuario.id) }
+      : {};
+
+  const ordenes = await Orden.find(filtro)
+    .populate("productos.producto")
+    .populate("comprador vendedor");
+
+  console.log("FILTRO:", filtro);
+  console.log("ORDENES ENCONTRADAS:", ordenes.length);
+  const todas = await Orden.find();
+console.log("TODAS LAS ORDENES:", todas);
+
   res.json(ordenes);
 };
+
 
 export const createOrden = async (req: Request, res: Response) => {
   const nuevaOrden = new Orden(req.body);
