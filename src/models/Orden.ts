@@ -1,4 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IUsuario } from './Usuario';
+import { Types } from 'mongoose';
+
 
 interface ProductoOrdenado {
   producto: mongoose.Schema.Types.ObjectId;
@@ -8,8 +11,8 @@ interface ProductoOrdenado {
 export interface IOrden extends Document {
   numeroFactura: string;
   productos: ProductoOrdenado[];
-  comprador: mongoose.Schema.Types.ObjectId;
-  vendedor: mongoose.Schema.Types.ObjectId;
+  comprador: Types.ObjectId | IUsuario;
+ vendedor: Types.ObjectId | IUsuario;
   fechaCreacion: Date;
   fechaActualizacion: Date;
 }

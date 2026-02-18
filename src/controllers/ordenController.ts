@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Orden from '../models/Orden';
 
 import mongoose from "mongoose";
+import { Types } from 'mongoose';
 
 export const getOrdenes = async (req: Request, res: Response) => {
   const filtro =
@@ -32,9 +33,18 @@ export const getOrdenById = async (req: Request, res: Response) => {
   const orden = await Orden.findById(req.params.id).populate('productos.producto').populate('comprador vendedor');
   if (!orden) return res.status(404).json({ message: 'Orden no encontrada' });
 
-  if (req.usuario?.rol === 'vendedor' && orden.vendedor.toString() !== req.usuario.id) {
+  if (req.usuario?.rol === 'vendedor') {
+  const vendedorId =
+    orden.vendedor instanceof Types.ObjectId
+      ? orden.vendedor.toString()
+      : orden.vendedor._id.toString();
+
+  if (vendedorId !== req.usuario.id) {
     return res.status(403).json({ message: 'No autorizado para ver esta orden' });
   }
+}
+
+
 
   res.json(orden);
 };
