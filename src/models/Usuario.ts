@@ -9,6 +9,7 @@ export interface IUsuario extends Document {
   password: string;
   fechaCreacion: Date;
   fechaActualizacion: Date;
+  numeroFacturaActual?: number;
 }
 
 const UsuarioSchema: Schema = new Schema(
@@ -18,6 +19,7 @@ const UsuarioSchema: Schema = new Schema(
     rol: { type: String, enum: ['admin', 'vendedor', 'usuario'], default: 'usuario' },
     avatar: { type: String },
     password: { type: String, required: true },
+    numeroFacturaActual: { type: Number, default: 0 },
   },
   { timestamps: { createdAt: 'fechaCreacion', updatedAt: 'fechaActualizacion' } }
 );
