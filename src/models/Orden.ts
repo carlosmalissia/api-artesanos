@@ -19,14 +19,15 @@ export interface IOrden extends Document {
 
 const OrdenSchema: Schema = new Schema(
   {
-    numeroFactura: { type: String, required: true, unique: true },
+    numeroFactura: { type: String, required: true },
     productos: [
-      {
-        producto: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto', required: true },
-        cantidad: { type: Number, required: true },
-        PrecioUnitario:{type: Number }
-      },
-    ],
+  {
+    producto: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto', required: true },
+    cantidad: { type: Number, required: true },
+    precioUnitario: { type: Number, required: true },
+    subtotal: { type: Number, required: true }
+  }
+],
     comprador: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     vendedor: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     precioTotal: {type: Number},
@@ -34,5 +35,6 @@ const OrdenSchema: Schema = new Schema(
   },
   { timestamps: { createdAt: 'fechaCreacion', updatedAt: 'fechaActualizacion' } }
 );
+OrdenSchema.index({ vendedor: 1, numeroFactura: 1 }, { unique: true });
 
 export default mongoose.model<IOrden>('Orden', OrdenSchema);
