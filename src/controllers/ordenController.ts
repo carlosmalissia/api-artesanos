@@ -7,23 +7,25 @@ import mongoose from "mongoose";
 import { Types } from 'mongoose';
 
 export const getOrdenes = async (req: Request, res: Response) => {
-  const filtro =
-    req.usuario?.rol === "vendedor"
-      ? { vendedor: new mongoose.Types.ObjectId(req.usuario.id) }
-      : {};
+  const userId = req.usuario!.id;
+  const roles = req.usuario!.roles;
+
+  let filtro = {};
+
+  if (roles.includes("admin")) {
+    filtro = {};
+  } else if (roles.includes("vendedor")) {
+    filtro = { vendedor: new mongoose.Types.ObjectId(userId) };
+  } else if (roles.includes("comprador")) {
+    filtro = { comprador: new mongoose.Types.ObjectId(userId) };
+  }
 
   const ordenes = await Orden.find(filtro)
     .populate("productos.producto")
     .populate("comprador vendedor");
 
-  console.log("FILTRO:", filtro);
-  console.log("ORDENES ENCONTRADAS:", ordenes.length);
-  const todas = await Orden.find();
-console.log("TODAS LAS ORDENES:", todas);
-
   res.json(ordenes);
 };
-
 
 export const createOrden = async (req: Request, res: Response) => {
   try {
@@ -33,7 +35,7 @@ export const createOrden = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Debe agregar al menos un producto" });
     }
 
-    const vendedorId = req.usuario!.id;
+    const vendedorId = req.usuario!.id; //Se asume que vendedor crea manualmente las ordenes, hay que cambiarlo mas adelante
 
     // 🔹 Generar número de factura automático
     const vendedorDB = await Usuario.findById(vendedorId);
@@ -99,16 +101,30 @@ export const getOrdenById = async (req: Request, res: Response) => {
 
   if (!orden) return res.status(404).json({ message: 'Orden no encontrada' });
 
-  if (req.usuario?.rol === 'vendedor') {
-    const vendedorId =
-      orden.vendedor instanceof Types.ObjectId
-        ? orden.vendedor.toString()
-        : orden.vendedor._id.toString();
+  const userId = req.usuario!.id;
+  const roles = req.usuario!.roles;
 
-    if (vendedorId !== req.usuario.id) {
-      return res.status(403).json({ message: 'No autorizado para ver esta orden' });
-    }
+if (roles.includes("vendedor")) {
+  const vendedorId =
+    orden.vendedor instanceof Types.ObjectId
+      ? orden.vendedor.toString()
+      : orden.vendedor._id.toString();
+
+  if (vendedorId !== userId) {
+    return res.status(403).json({ message: "No autorizado" });
   }
+}
+
+if (roles.includes("comprador")) {
+  const compradorId =
+    orden.comprador instanceof Types.ObjectId
+      ? orden.comprador.toString()
+      : orden.comprador._id.toString();
+
+  if (compradorId !== userId) {
+    return res.status(403).json({ message: "No autorizado" });
+  }
+}
 
   // 🔥 Agregamos subtotal calculado dinámicamente
   const ordenConSubtotales = {

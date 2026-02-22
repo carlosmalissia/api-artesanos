@@ -3,26 +3,51 @@ import Usuario from '../models/Usuario';
 import Orden from '../models/Orden';
 
 export const getUsuarios = async (req: Request, res: Response) => {
-  if (req.usuario?.rol === 'vendedor') {
-    const ordenes = await Orden.find({ vendedor: req.usuario.id }).select('comprador');
-    const compradoresIds = ordenes.map((o) => o.comprador.toString());
+  if (req.usuario?.roles?.includes('vendedor')) {
+
+    const ordenes = await Orden.find({
+      vendedor: req.usuario.id
+    }).select('comprador');
+
+    const compradoresIds = ordenes.map((o) =>
+      o.comprador.toString()
+    );
+
     const compradoresUnicos = [...new Set(compradoresIds)];
-    const compradores = await Usuario.find({ _id: { $in: compradoresUnicos } }).select('-password');
+
+    const compradores = await Usuario.find({
+      _id: { $in: compradoresUnicos }
+    }).select('-password');
+
     return res.json(compradores);
+
   } else {
+
     const usuarios = await Usuario.find().select('-password');
     return res.json(usuarios);
+
   }
 };
 
 export const createUsuario = async (req: Request, res: Response) => {
-  const { nombre, email, rol, avatar, password } = req.body;
-  const existe = await Usuario.findOne({ email });
-  if (existe) return res.status(400).json({ message: 'El correo ya está registrado' });
+  const { nombre, email, roles, avatar, password } = req.body;
 
-  const nuevoUsuario = new Usuario({ nombre, email, rol, avatar, password });
+  const existe = await Usuario.findOne({ email });
+  if (existe) {
+    return res.status(400).json({ message: 'El correo ya está registrado' });
+  }
+
+  const nuevoUsuario = new Usuario({
+    nombre,
+    email,
+    roles: roles && roles.length ? roles : ['comprador'],
+    avatar,
+    password
+  });
+
   await nuevoUsuario.save();
-  const usuarioSinPassword = nuevoUsuario.toObject() as { [key: string]: any };
+
+  const usuarioSinPassword = nuevoUsuario.toObject() as any;
   delete usuarioSinPassword.password;
 
   res.status(201).json(usuarioSinPassword);
