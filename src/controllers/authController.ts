@@ -23,7 +23,7 @@ export const login = async (req: Request, res: Response) => {
 
   const tokenPayload: any = {
     id: usuario._id,
-    rol: usuario.rol,
+    roles: usuario.roles,
     nombre: usuario.nombre,
   };
 
