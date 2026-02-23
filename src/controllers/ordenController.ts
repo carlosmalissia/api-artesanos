@@ -97,7 +97,8 @@ export const createOrden = async (req: Request, res: Response) => {
 export const getOrdenById = async (req: Request, res: Response) => {
   const orden = await Orden.findById(req.params.id)
     .populate('productos.producto')
-    .populate('comprador vendedor');
+    .populate('comprador vendedor')
+    .lean();
 
   if (!orden) return res.status(404).json({ message: 'Orden no encontrada' });
 
@@ -126,16 +127,16 @@ if (roles.includes("comprador")) {
   }
 }
 
-  // 🔥 Agregamos subtotal calculado dinámicamente
+  /* // 🔥 Agregamos subtotal calculado dinámicamente
   const ordenConSubtotales = {
     ...orden.toObject(),
     productos: orden.productos.map((item: any) => ({
       ...item,
       subtotal: item.precioUnitario * item.cantidad
     }))
-  };
+  }; */
 
-  res.json(ordenConSubtotales);
+  res.json(orden);
 };
 
 export const deleteOrden = async (req: Request, res: Response) => {
