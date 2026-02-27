@@ -9,6 +9,7 @@ import productoRoutes from './routes/productoRoutes';
 import categoriaRoutes from './routes/categoriaRoutes';
 import ordenRoutes from './routes/ordenRoutes';
 import imageRoutes from './routes/imageRoutes';
+import clientesRoutes from "./routes/clientesRoutes";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/productos', productoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/ordenes', ordenRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/clientes', clientesRoutes )
 
 // Ruta base
 app.get('/', (_req, res) => {
