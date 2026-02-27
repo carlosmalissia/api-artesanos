@@ -9,17 +9,20 @@ import productoRoutes from './routes/productoRoutes';
 import categoriaRoutes from './routes/categoriaRoutes';
 import ordenRoutes from './routes/ordenRoutes';
 import imageRoutes from './routes/imageRoutes';
-import clientesRoutes from "./routes/clientesRoutes";
+import clientesRoutes from './routes/clientesRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 dotenv.config();
 
 const app = express();
 
 // Middlewares
-app.use(cors({
-  origin: 'http://localhost:3000', // tu frontend
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // tu frontend
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -30,7 +33,8 @@ app.use('/api/productos', productoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/ordenes', ordenRoutes);
 app.use('/api/images', imageRoutes);
-app.use('/api/clientes', clientesRoutes )
+app.use('/api/clientes', clientesRoutes);
+app.use('/api/vendors-with-metrics', adminRoutes);
 
 // Ruta base
 app.get('/', (_req, res) => {

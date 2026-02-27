@@ -18,8 +18,12 @@ const UsuarioSchema: Schema = new Schema(
     email: { type: String, required: true, unique: true },
     roles: {
       type: [String],
-      enum: ['admin', 'vendedor','comprador'],
-      default: ['comprador']
+      enum: ['admin', 'vendedor', 'cliente'],
+      default: ['cliente'],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
     },
     avatar: { type: String },
     password: { type: String, required: true },
