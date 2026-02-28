@@ -5,7 +5,7 @@ export const getVendorsWithMetrics = async (req: Request, res: Response): Promis
   try {
     const vendors = await Usuario.aggregate([
       // Solo vendedores (roles es array)
-      { $match: { roles: 'vendedor' } },
+      { $match: { roles: { $in: ['VENDEDOR'] } } },
 
       // Lookup órdenes
       {

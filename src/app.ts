@@ -11,6 +11,7 @@ import ordenRoutes from './routes/ordenRoutes';
 import imageRoutes from './routes/imageRoutes';
 import clientesRoutes from './routes/clientesRoutes';
 import adminRoutes from './routes/adminRoutes';
+import executiveRoutes from './routes/executiveRoutes';
 
 dotenv.config();
 
@@ -25,7 +26,6 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-
 // Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuarioRoutes);
@@ -35,6 +35,7 @@ app.use('/api/ordenes', ordenRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/clientes', clientesRoutes);
 app.use('/api/vendors-with-metrics', adminRoutes);
+app.use('/api/executive', executiveRoutes);
 
 // Ruta base
 app.get('/', (_req, res) => {
