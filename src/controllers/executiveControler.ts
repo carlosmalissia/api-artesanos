@@ -89,8 +89,49 @@ export const getSalesByMonth = async (req: Request, res: Response) => {
         },
       },
     ]);
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // Mongo month es 1-12
+    const today = now.getDate();
 
-    res.json(ventasPorMes);
+    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+    let isCurrentMonth = false;
+    let monthCompletionPercentage = null;
+    let projectedVentas = null;
+    let projectedComisiones = null;
+
+    if (ventasPorMes.length > 0) {
+      const lastMonthData = ventasPorMes[ventasPorMes.length - 1];
+      const isLastDayOfMonth = today === daysInMonth;
+
+      if (
+        lastMonthData.year === currentYear &&
+        lastMonthData.month === currentMonth &&
+        !isLastDayOfMonth
+      ) {
+        isCurrentMonth = true;
+
+        monthCompletionPercentage = Math.round((today / daysInMonth) * 100);
+
+        const dailyRateVentas = lastMonthData.totalVentas / today;
+
+        const dailyRateComisiones = lastMonthData.totalComisiones / today;
+
+        projectedVentas = Math.round(dailyRateVentas * daysInMonth);
+        projectedComisiones = Math.round(dailyRateComisiones * daysInMonth);
+      }
+    }
+
+    res.json({
+      data: ventasPorMes,
+      meta: {
+        isCurrentMonth,
+        monthCompletionPercentage,
+        projectedVentas,
+        projectedComisiones,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error obteniendo ventas mensuales' });
