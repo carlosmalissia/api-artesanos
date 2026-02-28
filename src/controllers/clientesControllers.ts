@@ -23,7 +23,7 @@ export const getClientes = async (req: Request, res: Response) => {
         vendedor: new mongoose.Types.ObjectId(userId),
       }).select('cliente');
 
-      const compradoresIds = [...new Set(ordenes.map((orden) => orden.comprador.toString()))];
+      const compradoresIds = [...new Set(ordenes.map((orden) => orden.cliente.toString()))];
 
       const clientes = await Usuario.find({
         _id: { $in: compradoresIds },

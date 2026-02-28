@@ -4,9 +4,10 @@ import bcrypt from 'bcrypt';
 export interface IUsuario extends Document {
   nombre: string;
   email: string;
-  roles: ('admin' | 'vendedor' | 'comprador')[];
+  roles: ('OWNER' | 'ADMIN' | 'VENDEDOR' | 'CLIENTE')[];
   avatar?: string;
   password: string;
+  porcentajeComision: number;
   fechaCreacion: Date;
   fechaActualizacion: Date;
   numeroFacturaActual?: number;
@@ -18,8 +19,14 @@ const UsuarioSchema: Schema = new Schema(
     email: { type: String, required: true, unique: true },
     roles: {
       type: [String],
-      enum: ['admin', 'vendedor', 'cliente'],
-      default: ['cliente'],
+      enum: ['OWNER', 'ADMIN', 'VENDEDOR', 'CLIENTE'],
+      default: ['CLIENTE'],
+      required: true,
+    },
+    tipoPlan: {
+      type: String,
+      enum: ['COMISION', 'SUSCRIPCION', 'MIXTO'],
+      default: 'COMISION',
     },
     isActive: {
       type: Boolean,

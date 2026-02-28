@@ -3,12 +3,12 @@ import Usuario from '../models/Usuario';
 import Orden from '../models/Orden';
 
 export const getUsuarios = async (req: Request, res: Response) => {
-  if (req.usuario?.roles?.includes('vendedor')) {
+  if (req.usuario?.roles?.includes('VENDEDOR')) {
     const ordenes = await Orden.find({
       vendedor: req.usuario.id,
     }).select('cliente');
 
-    const compradoresIds = ordenes.map((o) => o.comprador.toString());
+    const compradoresIds = ordenes.map((o) => o.cliente.toString());
 
     const compradoresUnicos = [...new Set(compradoresIds)];
 
@@ -34,7 +34,7 @@ export const createUsuario = async (req: Request, res: Response) => {
   const nuevoUsuario = new Usuario({
     nombre,
     email,
-    roles: roles && roles.length ? roles : ['cliente'],
+    roles: roles && roles.length ? roles : ['CLIENTE'],
     avatar,
     password,
   });
