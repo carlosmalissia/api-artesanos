@@ -6,6 +6,7 @@ import {
   crearCategoria,
   actualizarCategoria,
   toggleCategoria,
+  obtenerImpactoCategoria,
 } from '../controllers/categoriaController';
 import { authenticate, authorize } from '../middlewares/auth';
 
@@ -22,5 +23,6 @@ router.post('/', authenticate, authorize(['OWNER', 'ADMIN']), crearCategoria);
 /* router.get('/:id', getCategoriaById);  ver si hace falta*/
 router.put('/:id', authenticate, authorize(['OWNER', 'ADMIN']), actualizarCategoria);
 router.patch('/:id/toggle', authenticate, authorize(['OWNER', 'ADMIN']), toggleCategoria);
+router.get('/:id/impact', authenticate, authorize(['OWNER', 'ADMIN']), obtenerImpactoCategoria);
 
 export default router;

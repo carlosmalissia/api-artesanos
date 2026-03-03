@@ -85,6 +85,33 @@ export const obtenerCategoriasArbol = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const obtenerImpactoCategoria = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const productos = await Producto.find({
+      categoriaId: id,
+      isDeleted: false, // 👈 importante
+    })
+      .select('vendedorId')
+      .lean();
+
+    const productosActivos = productos.length;
+
+    const vendedoresUnicos = new Set(productos.map((p) => p.vendedorId?.toString()));
+
+    const vendedoresAfectados = vendedoresUnicos.size;
+
+    res.json({
+      productosActivos,
+      vendedoresAfectados,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const crearCategoria = async (req: Request, res: Response) => {
   try {
     const { nombre, descripcion, parent, orden } = req.body;

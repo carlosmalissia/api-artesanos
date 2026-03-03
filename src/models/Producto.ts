@@ -6,8 +6,8 @@ export interface IProducto extends Document {
   precio: number;
   stock: number;
   image: string;
-  vendedor: mongoose.Schema.Types.ObjectId;
-  categoria: mongoose.Schema.Types.ObjectId;
+  vendedorId: mongoose.Schema.Types.ObjectId;
+  categoriaId: mongoose.Schema.Types.ObjectId;
   fechaCreacion: Date;
   fechaActualizacion: Date;
 }
